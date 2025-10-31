@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Homenagem a Alisson Bastos – Aprisco Ruakh</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="book-container">
+    <div class="book">
+      
+      <!-- Página 1 – Capa -->
+      <div class="page current">
+        <div class="side front cover">
+            <div class="cover-content">
+            <img src="assets/logo_ruakh.png" alt="Logo Ruakh" class="cover-logo" />
+            <h1 class="cover-title">Aprisco Ruakh</h1>
+            <h2 class="cover-subtitle">Uma homenagem a<br><strong>Alisson Bastos</strong></h2>
+            <p class="cover-quote">"O vento sopra onde quer, e ouves a sua voz..." – João 3:8</p>
+            </div>
+            <div class="cover-light"></div>
+        </div>
+        <div class="side back photo-scene">
+            <img src="assets/capa_fundo.png" alt="fundo" class="layer fundo" />
+            <img src="assets/alisson_centro.png" alt="Alisson" class="layer personagem" data-delay="0.4" />
+            <img src="assets/logo_ruakh.png" alt="logo Ruakh" class="layer logo" data-delay="0.8" />
+            <p class="caption">“Há um tempo de plantar e um tempo de colher.” – Eclesiastes 3:2</p>
+        </div>
+       </div>
+
+      <!-- Página 2 – O início da jornada -->
+      <div class="page">
+        <div class="side front">
+          <h2>O início da jornada</h2>
+          <p>Desde o primeiro dia no Aprisco Ruakh, Alisson caminhou conosco com fé, alegria e propósito.</p>
+          <p>Sua presença foi como o vento suave de Deus — constante, leve, mas sempre transformadora.</p>
+        </div>
+        <div class="side back photo-scene">
+          <img src="assets/jovens_base.png" alt="grupo base" class="layer base">
+          <img src="assets/jovens_frente.png" alt="grupo frente" class="layer frente">
+          <img src="assets/vento.png" alt="vento" class="layer vento">
+          <p class="caption">O vento sopra onde quer... e ouves a sua voz. – João 3:8</p>
+        </div>
+      </div>
+
+      <!-- Página 3 – Companheirismo -->
+      <div class="page">
+        <div class="side front">
+          <h2>Companheirismo e fé</h2>
+          <p>Entre risadas, ensaios e orações, criamos laços eternos.</p>
+          <p>Alisson, tua amizade foi um presente que refletiu o amor de Cristo em cada gesto.</p>
+        </div>
+        <div class="side back photo-scene">
+          <img src="assets/fotos_lembrancas_fundo.png" class="layer fundo" alt="lembranças">
+          <p class="caption">“Em todo tempo ama o amigo.” – Provérbios 17:17</p>
+        </div>
+      </div>
+
+      <!-- Página 4 – A despedida -->
+      <div class="page">
+        <div class="side front">
+          <h2>Novos ventos</h2>
+          <p>Chegou o tempo de seguir novos caminhos, mas o mesmo vento que te guiou até aqui continuará te conduzindo.</p>
+          <p>Ruakh, o sopro de Deus, vai contigo, Alisson.</p>
+        </div>
+        <div class="side back photo-scene">
+          <img src="assets/caminho.png" class="layer fundo" alt="caminho">
+          <img src="assets/alisson_caminhando.png" class="layer personagem">
+          <p class="caption">Que o vento leve tuas sementes de fé para novos horizontes.</p>
+        </div>
+      </div>
+
+      <!-- Página 5 – Mensagem final -->
+      <div class="page">
+        <div class="side front">
+          <h2>Com carinho,</h2>
+          <p>De todos nós, teus amigos e irmãos do <strong>Aprisco Ruakh</strong>.</p>
+          <p>Te desejamos novos começos, novas bênçãos, e a eterna presença do Espírito que sopra vida em tudo que toca.</p>
+          <p style="margin-top:20px; font-style:italic;">“O Senhor te abençoe e te guarde; o Senhor faça resplandecer o seu rosto sobre ti.” – Números 6:24-25</p>
+        </div>
+        <div class="side back photo-scene">
+          <img src="assets/grupo_final_fundo.png" class="layer fundo">
+          <img src="assets/grupo_final_frente.png" class="layer frente">
+          <p class="caption">Até breve, Alisson 🌿</p>
+        </div>
+      </div>
+
+      <!-- Botões -->
+      <button class="prev">Anterior</button>
+      <button class="next">Próximo</button>
+
+    </div>
+  </div>
+
+  <div class="fireworks-container" id="fireworks"></div>
+
+  <script>
+    const pages = document.querySelectorAll('.book .page');
+    const fireworksContainer = document.querySelector('.fireworks-container');
+    let currentIndex = 0;
+
+    // Cores dos fogos de artifício
+    const fireworkColors = [
+        '#ff4500', '#ffd700', '#00ff7f', '#1e90ff', '#ff1493', '#8a2be2', '#00ffff', '#ff69b4'
+    ];
+
+    const fireworkSound = new Audio('assets/fireworks.mp3');
+    fireworkSound.volume = 0.5;
+
+    const pageFlip = new Audio('assets/page-flip.mp3');
+    pageFlip.volume = 0.5;
+
+    const backgroundMusic = new Audio('assets/Goodness of god.mp3');
+    // Ajusta o volume (0.0 a 1.0)
+    backgroundMusic.volume = 0.5;
+    // Ativa o loop contínuo
+    backgroundMusic.loop = true;
+
+    window.addEventListener('load', () => {
+        backgroundMusic.play().catch(err => {
+        console.log("O navegador bloqueou o autoplay:", err);
+        // Em alguns navegadores, autoplay só funciona após interação do usuário
+        });
+    });
+
+    // Função para criar um único fogo de artifício
+    function createFirework(x, y) {
+        const firework = document.createElement('div');
+        firework.classList.add('firework');
+
+        // Posição horizontal e altura
+        firework.style.left = `${x}%`;
+        firework.style.bottom = '0';
+        firework.style.setProperty('--firework-y', `-${y}vh`);
+
+        // Cores aleatórias para os raios da explosão
+        for (let i = 1; i <= 8; i++) {
+            const randomColor = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+            firework.style.setProperty(`--firework-color-${i}`, randomColor);
+        }
+
+        // Remove o elemento após a animação
+        firework.addEventListener('animationend', () => firework.remove());
+
+        fireworksContainer.appendChild(firework);
+    }
+
+    // Inicia a simulação de fogos
+    function startFireworks() {
+        if (fireworksContainer.classList.contains('active')) return;
+
+        fireworksContainer.classList.add('active');
+        fireworkSound.currentTime = 0;
+        fireworkSound.play();
+
+        const maxFireworks = 20; // aumenta o número de fogos
+        let count = 0;
+
+        function shootFirework() {
+            if (count >= maxFireworks) return;
+
+            const x = Math.random() * 80 + 10; // posição horizontal 10%-90%
+            const y = Math.random() * 40 + 50; // altura 50vh-90vh
+
+            createFirework(x, y);
+            count++;
+
+            setTimeout(shootFirework, Math.random() * 300 + 200); // intervalo entre 0.2s e 0.5s
+        }
+
+        shootFirework();
+    }
+
+    function stopFireworks() {
+        fireworksContainer.classList.remove('active');
+        fireworksContainer.innerHTML = '';
+    }
+
+    // Atualiza página
+    function showPage(idx) {
+        pages.forEach((p, i) => {
+            if (i < idx) p.classList.add('flipped');
+            else p.classList.remove('flipped');
+            p.classList.toggle('current', i === idx);
+
+            const layers = Array.from(p.querySelectorAll('.photo-scene .layer'));
+            layers.reverse();
+
+            layers.forEach(layer => {
+                layer.classList.remove('show');
+                if (i !== idx) {
+                    const delay = layer.dataset.delay ? parseFloat(layer.dataset.delay) : 0;
+                    setTimeout(() => layer.classList.add('show'), 50 + delay * 1000);
+                }
+            });
+
+            const back = p.querySelector('.side.back');
+            if (back) back.style.pointerEvents = i === idx ? "auto" : "none";
+        });
+
+        // Se for a última página, dispara os fogos
+        if (idx === pages.length - 1) startFireworks();
+        else stopFireworks();
+    }
+
+    // Botões
+    document.querySelector('.next').addEventListener('click', () => {
+        if (currentIndex < pages.length - 1) currentIndex++;
+
+        // Define um pitch/velocidade aleatória entre 0.9 e 1.1
+        pageFlip.playbackRate = 0.9 + Math.random() * 0.2;
+
+        pageFlip.currentTime = 0;
+        pageFlip.play();
+        showPage(currentIndex);
+    });
+
+    document.querySelector('.prev').addEventListener('click', () => {
+        if (currentIndex > 0) currentIndex--;
+
+        // Define um pitch/velocidade aleatória entre 0.9 e 1.1
+        pageFlip.playbackRate = 0.9 + Math.random() * 0.2;
+
+        pageFlip.currentTime = 0;
+        pageFlip.play();
+        showPage(currentIndex);
+    });
+
+
+    showPage(0);
+    </script>
+</body>
+</html>

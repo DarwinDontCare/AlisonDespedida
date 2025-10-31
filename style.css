@@ -1,0 +1,740 @@
+/* ====== CONFIGURAÇÃO GERAL ====== */
+.book .page:nth-child(5) { z-index: 1; }
+.book .page:nth-child(4) { z-index: 2; }
+.book .page:nth-child(3) { z-index: 3; }
+.book .page:nth-child(2) { z-index: 4; }
+.book .page:nth-child(1) { z-index: 5; background-color: #A0522D;}
+
+.book .page:nth-child(1) .side { background: #A0522D;}
+
+/* 🎯 AJUSTE ESPECÍFICO: PERSONAGEM DA PÁGINA 1 (VERSO DA CAPA) */
+.page:nth-child(1) .side.back .layer.personagem {
+    /* 1. Definição do Tamanho no Estado Normal */
+    width: 70%; /* Defina a largura desejada (ex: 70% da página) */
+    height: auto;
+    
+    /* 2. Centralização Padrão (para quando não estiver animando) */
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 3. Sobrescrita do ESTADO FINAL da Animação (.show) */
+/* Esta regra garante que a imagem termine no centro, anulando a animação layerEnter */
+.page:nth-child(1) .side.back .layer.personagem.show {
+    opacity: 1;
+    /* Combina a centralização (-50%, -50%) com a transformação 3D final (scale(1) rotateX(0)) */
+    transform: translate(-50%, -50%) scale(1) rotateX(0); 
+    
+    /* Se a animação ainda interferir, use !important: */
+    /* transform: translate(-50%, -50%) scale(1) rotateX(0) !important; */
+}
+
+/* 🖼️ AJUSTE ESPECÍFICO: FUNDO DA PÁGINA 1 (VERSO DA CAPA) */
+.page:nth-child(1) .side.back .layer.fundo {
+    /* 1. Definição do Tamanho para o Background */
+    width: 100%; /* Ajuste a largura. 100% preenche a página. */
+    height: 100%; /* Ajuste a altura. */
+    
+    /* 2. Centralização Padrão (necessária para mover o fundo) */
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centraliza o centro da imagem no centro da página */
+    
+    /* Garante que o fundo não seja cortado durante a centralização, 
+       mas isso depende se você quer que ele cubra ou se ajuste. 
+       Se a imagem deve cobrir toda a área, use: */
+    object-fit: cover; 
+}
+
+/* 3. Sobrescrita do ESTADO FINAL da Animação (.show) */
+/* Garante que o background termine no centro e receba o efeito de entrada. */
+.page:nth-child(1) .side.back .layer.fundo.show {
+    opacity: 1;
+    /* Combina a centralização com a transformação 3D final */
+    transform: translate(-50%, -50%) scale(1) rotateX(0);
+}
+
+/* 🖼️ AJUSTE ESPECÍFICO: ALINHAMENTO DAS CAMADAS DA PÁGINA 2 */
+/* Aplica-se à página 2 (o segundo .page) */
+.page:nth-child(2) .side.back .layer.base,
+.page:nth-child(2) .side.back .layer.frente {
+    /* 1. Posicionamento Absoluto (Padrão para .layer, mas bom confirmar) */
+    position: absolute;
+    
+    /* 2. Definir Posição e Tamanho (Opção 1: Preencher o Contêiner) */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* 3. Garantir que a imagem cubra a área sem distorção (opcional, mas recomendado para fotos) */
+    object-fit: cover;
+    
+    /* 4. Garantir que as transformações de animação não desalinhem no estado final */
+    /* Sobrescreve o transform: translateY(0) scale(1) rotateX(0) do .show */
+    transform: none; 
+}
+
+/* ⚠️ ATENÇÃO: É crucial sobrescrever o estado final da animação. */
+.page:nth-child(2) .side.back .layer.base.show,
+.page:nth-child(2) .side.back .layer.frente.show {
+    opacity: 1;
+    /* Redefine a transformação para garantir que estejam alinhadas no estado final */
+    /* Remove o translateY da animação, deixando-as alinhadas no topo/esquerda */
+    transform: none !important; 
+}
+
+body {
+  background: radial-gradient(circle at 20% 20%, #e0d8c3, #c9b89a);
+  font-family: "Garamond", serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* ====== LIVRO ====== */
+.book-container {
+    perspective: 1800px;
+    transform-style: preserve-3d;
+    max-width: 500px;
+    width: 90%
+}
+
+.book {
+    width: 100%;
+    /* Define a proporção do livro (Ex: 500px / 350px = 1.428) */
+    padding-bottom: 70%; /* 70% de 500px é 350px - Mantém a proporção 5:3.5 */
+    height: 0; /* Zera a altura para que padding-bottom defina a altura */
+
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.book .page.current {
+    z-index: 10;
+}
+
+.book .page.flipped {
+    z-index: 1;
+}
+
+.page {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  transition: transform 1.2s ease-in-out;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  border-radius: 6px;
+  transition: transform 1.2s ease-in-out, visibility 0s linear 1.2s;
+}
+
+.page.flipped .front {
+    visibility: visible;
+    transition: transform 1.2s ease-in-out, visibility 0s 0s;
+}
+
+.page.flipped .back {
+    visibility: hidden;
+    transition: visibility 0s 0s;
+}
+
+.page .side {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 6px;
+  box-sizing: border-box;
+  padding: 30px;
+  background: linear-gradient(135deg, #f9f7f2, #efe9dd);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+}
+
+/* Frente da página */
+.page .front {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #5b4a3b;
+  text-align: center;
+}
+
+/* Verso com o cenário pop-up */
+.page .back {
+    transform: rotateY(180deg);
+    overflow: hidden;
+    backface-visibility: hidden;
+    
+    /* 🛑 REGRAS SIMPLIFICADAS: 
+       A opacidade e a visibilidade são controladas apenas por .flipped/not(.flipped) 
+       para manter o verso opaco durante a volta. */
+    opacity: 1; /* Garante que o fundo não fique transparente/branco */
+    visibility: visible;
+    pointer-events: auto;
+    transition: none; /* Remove a transição de opacidade que pode causar atrasos */
+}
+
+.page.current .back {
+  opacity: 1; /* visível quando a página está ativa */
+  pointer-events: auto; /* permite interação */
+}
+
+.page.flipped .back,
+.page:not(.flipped) .back {
+  opacity: 1; /* sempre visível para animações */
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Página virada */
+.page.flipped {
+  transform: rotateY(-180deg);
+  transition: transform 1.2s ease-in-out, visibility 0s 0s;
+}
+
+/*.page.current .back {
+  opacity: 1;
+}*/
+
+/* ====== BOTÕES ====== */
+.book button {
+  position: absolute;
+  bottom: -60px;
+  padding: 8px 16px;
+  border: none;
+  background: #b89a67;
+  color: #fff;
+  font-family: inherit;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: background 0.3s;
+}
+
+.book button:hover {
+  background: #9d8455;
+}
+
+.book button.prev { left: 20px; }
+.book button.next { right: 20px; }
+
+/* ====== CENÁRIO POP-UP ====== */
+.popup-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  perspective: 800px;
+  background: linear-gradient(to top, #d4f1ff 0%, #fefefe 100%);
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+/* Chão */
+.popup-scene .ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 35%;
+  background: linear-gradient(to top, #c0e2b1, #e4f7d8);
+  transform: translateZ(40px);
+}
+
+/* Montanha */
+.popup-scene .mountain {
+  position: absolute;
+  bottom: 30%;
+  left: 20%;
+  width: 60%;
+  height: 50%;
+  background: linear-gradient(to top, #9fc49a, #cfe5c8);
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+  transform: translateZ(60px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+/* Árvore */
+.popup-scene .tree {
+  position: absolute;
+  bottom: 35%;
+  left: 70%;
+  width: 30px;
+  height: 70px;
+  background: linear-gradient(to bottom, #6b4f2b, #4b351c);
+  border-radius: 3px;
+  transform: translateZ(80px) rotateY(-10deg);
+}
+
+.popup-scene .tree::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -25px;
+  width: 80px;
+  height: 60px;
+  background: radial-gradient(circle at 40% 40%, #4caf50, #3e8b3d);
+  border-radius: 50%;
+}
+
+/* Árvore menor */
+.popup-scene .tree.small {
+  left: 50%;
+  bottom: 30%;
+  transform: translateZ(70px) scale(0.7);
+}
+
+/* Sol */
+.popup-scene .sun {
+  position: absolute;
+  top: 10%;
+  right: 20%;
+  width: 70px;
+  height: 70px;
+  background: radial-gradient(circle at 30% 30%, #fff89a, #fdd24a);
+  border-radius: 50%;
+  transform: translateZ(90px);
+  box-shadow: 0 0 40px rgba(255, 235, 120, 0.7);
+  animation: pulseSun 4s ease-in-out infinite;
+}
+
+@keyframes pulseSun {
+  0%, 100% { transform: translateZ(90px) scale(1); opacity: 1; }
+  50% { transform: translateZ(100px) scale(1.05); opacity: 0.9; }
+}
+
+/* Pássaro */
+.popup-scene .bird {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  width: 30px;
+  height: 15px;
+  background: transparent;
+  border-top: 3px solid #444;
+  border-radius: 50%;
+  transform: translateZ(100px) rotateX(15deg);
+  animation: fly 6s ease-in-out infinite;
+}
+
+@keyframes fly {
+  0% { transform: translate3d(0, 0, 100px); }
+  50% { transform: translate3d(80px, -40px, 120px); }
+  100% { transform: translate3d(0, 0, 100px); }
+}
+
+/* Legenda do cenário */
+/* ====== CENÁRIO POP-UP (Páginas de Cenas 3D) ====== */
+.popup-scene .caption {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-style: italic;
+    color: #4a3f2d;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.6);
+    
+    /* 🚀 NOVO: Aumenta o z-index para garantir que fique acima das camadas (.layer) que vão até z-index: 7 */
+    z-index: 8; 
+    
+    transform: translateZ(110px);
+    animation: fadeIn 2s ease forwards;
+    opacity: 0;
+}
+
+.page.current .popup-scene .caption {
+    animation-delay: 0.8s;
+}
+
+/* ====== PÁGINAS COM FOTOS E ANIMAÇÕES (Se for necessário também) ====== */
+/* Se houver uma legenda com a classe 'caption' fora da popup-scene, 
+   adicione o mesmo z-index aqui: */
+.photo-scene .caption {
+    /* ... (outras propriedades) ... */
+    z-index: 8; 
+    /* ... (outras propriedades) ... */
+}
+
+.book .page:nth-child(2) .caption {
+  color: #fff; /* branco */
+}
+
+/* 🖼️ AJUSTE ESPECÍFICO: FUNDO E FRENTE DA PÁGINA 3 (Companheirismo e fé) */
+/* Aplica-se à página 3 (o terceiro .page) */
+.page:nth-child(3) .side.back .layer.fundo,
+.page:nth-child(3) .side.back .layer.frente {
+    /* Força o preenchimento total da área do contêiner .photo-scene */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* Garante que as imagens preencham a área sem distorção (cortando as bordas se necessário) */
+    object-fit: cover;
+    
+    /* Garante que o estado final da animação seja o preenchimento */
+    transform: none; 
+}
+
+/* Sobrescreve o ESTADO FINAL da Animação (.show) para garantir que fiquem no topo/esquerda */
+.page:nth-child(3) .side.back .layer.fundo.show,
+.page:nth-child(3) .side.back .layer.frente.show {
+    opacity: 1;
+    /* Redefine a transformação para garantir que estejam alinhadas no estado final */
+    transform: none !important; 
+}
+
+
+/* 📝 AJUSTE ESPECÍFICO: COR DA LEGENDA NA PÁGINA 3 */
+/* Aplica-se à legenda da página 3 */
+.page:nth-child(3) .side.back .caption {
+    color: #FFFFFF; /* Muda a cor do texto para Branco */
+    /* Você pode querer mudar a sombra para uma cor escura, se necessário */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8); 
+}
+
+/* Centraliza a imagem da página 4 (Alisson caminhando) */
+.book .page:nth-child(4) .side.back .layer.personagem {
+  position: absolute;
+  top: 62%;
+  left: 63%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: 45%; /* ajuste o tamanho conforme necessário */
+  object-fit: contain;
+}
+
+.book .page:nth-child(4) .side.back .layer.fundo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0; /* mantém o fundo atrás */
+}
+
+.page:nth-child(4) .side.back .caption {
+    color: #e9ce33; /* Muda a cor do texto para Branco */
+    /* Você pode querer mudar a sombra para uma cor escura, se necessário */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8); 
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* ====== PÁGINAS COM FOTOS E ANIMAÇÕES ====== */
+.photo-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(to top, #f7f2ea, #ffffff);
+  transform-style: preserve-3d;
+  perspective: 800px;
+}
+
+.photo-scene .layer {
+  opacity: 0;
+  transform: translateY(40px) scale(1.05) rotateX(10deg);
+  transition: transform 1s ease, opacity 1s ease;
+}
+
+.photo-scene .layer.personagem {
+  animation-delay: 0.4s;
+}
+
+.photo-scene .layer.frente {
+  animation-delay: 0.6s;
+}
+
+.photo-scene .layer.logo,
+.photo-scene .layer.luz,
+.photo-scene .layer.brilho {
+  animation-delay: 0.8s;
+  animation: layerEnter 1.2s ease forwards, pulse 4s ease-in-out infinite;
+}
+
+@keyframes layerEnter {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(1.05) rotateX(10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+}
+
+/* Legenda das páginas com fotos */
+.photo-scene .caption {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #4a3f2d;
+  font-style: italic;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.6);
+  animation: fadeIn 1.5s ease forwards;
+  opacity: 0;
+  animation-delay: 1s;
+}
+
+/* ====== CAPA DO LIVRO ====== */
+.cover {
+  /* 1. Cor Marrom Claro (Sienna/Couro) */
+    background-color: #A0522D;
+
+    /* 2. Simulação de Textura de Livro (Couro/Aspereza) */
+    background-image: 
+        /* Trama sutil com gradiente linear */
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 5px 5px; /* Define o tamanho da "trama" */
+    
+    /* 3. Sombra Interna para Profundidade (Borda do Livro) */
+    box-shadow: 
+        inset 0 0 20px rgba(0, 0, 0, 0.6), /* Sombra interna forte */
+        0 10px 15px rgba(0, 0, 0, 0.4); /* Sombra externa */
+
+    position: relative;
+    overflow: hidden;
+    border: 4px solid #8B4513;
+}
+
+.cover-content {
+    position: relative;
+    text-align: center;
+    color: #FFD700;
+    z-index: 2;
+    padding: 40px 20px; /* Reduzido o padding para ter mais área marrom */
+    
+    /* REMOVER QUALQUER BACKGROUND BRANCO AQUI */
+    background: none; 
+    /* Se você tem um fundo branco no cover-content, ele deve ser removido */
+}
+
+.cover-logo {
+    width: 120px;
+    height: auto;
+    margin-bottom: -20px;
+    /* Adiciona uma sombra dourada (simulando relevo ou luz) */
+    filter: drop-shadow(0 0 5px #DAA520);
+    animation: floatLogo 5s ease-in-out infinite;
+}
+
+@keyframes floatLogo {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.cover-title {
+    font-size: 2.8em;
+    font-family: "Garamond", serif;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    /* Dourado Sólido com Efeito de Relevo/Estampagem */
+    color: #FFD700; 
+    text-shadow: 
+        1px 1px 1px #8B4513, /* Sombra escura para profundidade */
+        -1px -1px 1px #FFF; /* Brilho claro para relevo */
+    animation: none; /* Desativa a animação shineTitle se não for necessária */
+}
+
+@keyframes shineTitle {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.cover-subtitle {
+    font-size: 1.3em;
+    font-weight: 400;
+    color: #FFD700; /* Dourado */
+    margin-top: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.cover-subtitle strong {
+    font-weight: 700;
+    color: #FFE4B5; /* Um tom mais claro de dourado */
+}
+
+.cover-quote {
+    font-style: italic;
+    color: #F0E68C; /* Dourado suave */
+    margin-top: 40px;
+    opacity: 0.9;
+    font-size: 1em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* Efeito de luz móvel na capa */
+.cover-light {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    /* Gradiente de luz sutil */
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
+    mix-blend-mode: screen;
+    animation: moveLight 8s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes moveLight {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(15%, 10%) rotate(10deg); }
+}
+
+@media (max-width: 600px) {
+    
+    /* Centraliza o livro na tela e aplica uma escala se necessário */
+    .book-container {
+        /* Permite que o livro ocupe a maior parte do espaço na vertical, se a largura for pequena */
+        max-width: 90vh; /* Permite que o livro se baseie na altura da tela se for mais restritiva */
+        width: 90%; 
+    }
+    
+    /* Reduz um pouco o padding interno nas páginas para telas menores */
+    .page .side {
+        padding: 20px;
+    }
+
+    /* Reduz o tamanho das fontes da capa para que caibam melhor */
+    .cover-title {
+        font-size: 2em; /* De 2.8em para 2em */
+    }
+    
+    .cover-subtitle {
+        font-size: 1.1em; /* De 1.3em para 1.1em */
+    }
+
+    /* Move os botões para mais perto da base do livro */
+    .book button {
+        bottom: -40px; /* De -60px para -40px */
+        padding: 6px 12px;
+    }
+}
+
+.photo-scene .layer.show {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotateX(0);
+}
+
+/* As camadas devem ter z-index progressivo para aparecer corretamente */
+.photo-scene .layer.fundo { z-index: 1; }
+.photo-scene .layer.base { z-index: 2; }
+.photo-scene .layer.personagem { z-index: 3; }
+.photo-scene .layer.frente { z-index: 4; }
+.photo-scene .layer.logo { z-index: 5; }
+.photo-scene .layer.luz { z-index: 6; }
+.photo-scene .layer.brilho { z-index: 7; }
+
+
+/* 1. Defina a animação para o pop-up */
+@keyframes popUpEntrance {
+  0% { transform: translateZ(0) scale(0.8); opacity: 0; }
+  100% { transform: translateZ(110px) scale(1); opacity: 1; }
+}
+
+/* 2. Aplique esta animação aos elementos do pop-up quando a página é virada */
+.page.flipped .popup-scene .mountain,
+.page.flipped .popup-scene .tree,
+.page.flipped .popup-scene .sun,
+.page.flipped .popup-scene .bird,
+.page.flipped .popup-scene .caption {
+    animation: popUpEntrance 0.8s ease-out 0.4s forwards; /* 0.4s de atraso para aparecer após o início da virada */
+}
+
+/* 3. Garanta que o estado inicial (antes da animação) seja o estado oculto */
+.popup-scene .mountain,
+.popup-scene .tree,
+.popup-scene .sun,
+.popup-scene .bird,
+.popup-scene .caption {
+    opacity: 0;
+    transform: translateZ(0) scale(0.8);
+}
+
+.page:not(.flipped) .popup-scene .caption {
+  animation: fadeIn 2s ease forwards;
+  animation-delay: 0.8s;
+  /* e o estado inicial deve ser */
+  opacity: 0; 
+}
+
+.fireworks-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.firework {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: white;
+    opacity: 1;
+    animation: rocket 1.2s ease-out forwards, explode 0.6s ease-out 1.2s forwards, fadeOut 0.8s ease-in 1.8s forwards;
+}
+
+@keyframes rocket {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-200px); opacity: 1; }
+}
+
+@keyframes explode {
+    to {
+        box-shadow:
+            red 30px -30px 0,
+            orange -30px -30px 0,
+            yellow 30px 30px 0,
+            lime -30px 30px 0,
+            cyan 0 -40px 0,
+            blue 0 40px 0,
+            magenta -40px 0 0,
+            white 40px 0 0;
+        width: 0;
+        height: 0;
+    }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; }
+}
+
+/* Correção importante para as imagens da última página não sumirem */
+.page:last-child {
+    z-index: 10; /* Garante que a última página (e seu conteúdo) fique visível */
+}
+
+/* Garante que o container do livro fique acima dos fogos durante a virada */
+.book-container {
+    z-index: 100;
+    position: relative;
+}
