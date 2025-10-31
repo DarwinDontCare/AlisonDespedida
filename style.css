@@ -629,7 +629,8 @@ body {
 
 @media (max-width: 768px) {
     .book-container {
-        height: 80vh;          /* menos altura para celular */
+        height: 50%;          /* menos altura para celular */
+        width: 80%;
     }
     .book .page {
         width: 100%;
