@@ -125,18 +125,6 @@
         }
     }
 
-    document.querySelector('.next').addEventListener('click', () => {
-        startMusic();
-        if (currentIndex < pages.length - 1) currentIndex++;
-            showPage(currentIndex);
-    });
-
-    document.querySelector('.prev').addEventListener('click', () => {
-        startMusic();
-        if (currentIndex > 0) currentIndex--;
-            showPage(currentIndex);
-    });
-
     // Função para criar um único fogo de artifício
     function createFirework(x, y) {
         const firework = document.createElement('div');
@@ -219,6 +207,7 @@
 
     // Botões
     document.querySelector('.next').addEventListener('click', () => {
+        startMusic();
         if (currentIndex < pages.length - 1) currentIndex++;
 
         // Define um pitch/velocidade aleatória entre 0.9 e 1.1
@@ -230,6 +219,7 @@
     });
 
     document.querySelector('.prev').addEventListener('click', () => {
+        startMusic();
         if (currentIndex > 0) currentIndex--;
 
         // Define um pitch/velocidade aleatória entre 0.9 e 1.1
