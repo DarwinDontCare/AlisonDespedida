@@ -102,11 +102,11 @@ body {
 .book-container {
     perspective: 1800px;
     transform-style: preserve-3d;
-    width: 100%;
+    width: 80%;
     max-width: 1200px;      /* livro maior para mostrar duas páginas */
     margin: 0 auto;
     margin-bottom: 5%;
-    height: 85%;            /* ocupa quase toda a altura da tela */
+    height: 80%;            /* ocupa quase toda a altura da tela */
     display: flex;
     justify-content: center;
     align-items: center;
