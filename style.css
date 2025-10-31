@@ -87,6 +87,26 @@
     transform: none !important; 
 }
 
+.side.front h2 {
+    /* Torna os títulos responsivos */
+    font-size: clamp(1.5em, 2.5vw, 2.5em); /* Ex: Mínimo 1.5x, Ideal 2.5% do viewport, Máximo 2.5x */
+    margin-top: 0.5em; /* Ajuste o espaçamento superior */
+    margin-bottom: 0.5em; /* Ajuste o espaçamento inferior */
+}
+
+/* Parágrafos (p) nas páginas internas */
+.side.front p {
+    /* Garante que o texto principal seja legível, mas se ajuste */
+    font-size: clamp(0.9em, 1.2vw, 1.1em);
+    line-height: 1.4;
+    margin-bottom: 0.8em;
+}
+
+.caption {
+    /* Diminui a fonte da legenda nas fotos */
+    font-size: clamp(0.7em, 1vw, 0.9em) !important; 
+}
+
 body {
   background: radial-gradient(circle at 20% 20%, #e0d8c3, #c9b89a);
   font-family: "Garamond", serif;
@@ -111,6 +131,7 @@ body {
     justify-content: center;
     align-items: center;
     background: radial-gradient(circle at 20% 20%, #e0d8c3, #c9b89a);
+    font-size: clamp(14px, 1.5vw, 18px);
 }
 
 .book {
