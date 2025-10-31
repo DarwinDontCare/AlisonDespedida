@@ -102,18 +102,33 @@ body {
 .book-container {
     perspective: 1800px;
     transform-style: preserve-3d;
-    max-width: 500px;
-    width: 90%
+    width: 100%;
+    max-width: 1200px;      /* livro maior para mostrar duas páginas */
+    margin: 0 auto;
+    height: 90vh;            /* ocupa quase toda a altura da tela */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at 20% 20%, #e0d8c3, #c9b89a);
 }
 
 .book {
-    width: 100%;
-    /* Define a proporção do livro (Ex: 500px / 350px = 1.428) */
-    padding-bottom: 70%; /* 70% de 500px é 350px - Mantém a proporção 5:3.5 */
-    height: 0; /* Zera a altura para que padding-bottom defina a altura */
-
+    width: 50%;
+    height: 100%;
     position: relative;
+    margin-left: 50%;
     transform-style: preserve-3d;
+}
+
+.book .page {
+    width: 100%;             /* ocupa todo o espaço do livro */
+    height: 100%;
+    position: absolute;       /* empilhadas no mesmo espaço */
+    top: 0;
+    left: 0;
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    transition: transform 1.2s ease-in-out;
 }
 
 .book .page.current {
@@ -121,6 +136,11 @@ body {
 }
 
 .book .page.flipped {
+    z-index: 1;
+}
+
+.page.flipped {
+    transform: rotateY(-180deg);
     z-index: 1;
 }
 
@@ -606,33 +626,14 @@ body {
   50% { transform: translate(15%, 10%) rotate(10deg); }
 }
 
-@media (max-width: 600px) {
-    
-    /* Centraliza o livro na tela e aplica uma escala se necessário */
+@media (max-width: 768px) {
     .book-container {
-        /* Permite que o livro ocupe a maior parte do espaço na vertical, se a largura for pequena */
-        max-width: 90vh; /* Permite que o livro se baseie na altura da tela se for mais restritiva */
-        width: 90%; 
+        height: 80vh;          /* menos altura para celular */
     }
-    
-    /* Reduz um pouco o padding interno nas páginas para telas menores */
-    .page .side {
-        padding: 20px;
-    }
-
-    /* Reduz o tamanho das fontes da capa para que caibam melhor */
-    .cover-title {
-        font-size: 2em; /* De 2.8em para 2em */
-    }
-    
-    .cover-subtitle {
-        font-size: 1.1em; /* De 1.3em para 1.1em */
-    }
-
-    /* Move os botões para mais perto da base do livro */
-    .book button {
-        bottom: -40px; /* De -60px para -40px */
-        padding: 6px 12px;
+    .book .page {
+        width: 100%;
+        height: 100%;
+        transform-origin: left center; /* mantém flip correto */
     }
 }
 
