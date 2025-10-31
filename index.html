@@ -112,16 +112,29 @@
     pageFlip.volume = 0.5;
 
     const backgroundMusic = new Audio('assets/Goodness of god.mp3');
-    // Ajusta o volume (0.0 a 1.0)
     backgroundMusic.volume = 0.5;
-    // Ativa o loop contínuo
     backgroundMusic.loop = true;
 
-    window.addEventListener('load', () => {
-        backgroundMusic.play().catch(err => {
-        console.log("O navegador bloqueou o autoplay:", err);
-        // Em alguns navegadores, autoplay só funciona após interação do usuário
-        });
+    // Toca a música no primeiro clique do usuário
+    let musicStarted = false;
+
+    function startMusic() {
+        if (!musicStarted) {
+            backgroundMusic.play().catch(err => console.log(err));
+            musicStarted = true;
+        }
+    }
+
+    document.querySelector('.next').addEventListener('click', () => {
+        startMusic();
+        if (currentIndex < pages.length - 1) currentIndex++;
+            showPage(currentIndex);
+    });
+
+    document.querySelector('.prev').addEventListener('click', () => {
+        startMusic();
+        if (currentIndex > 0) currentIndex--;
+            showPage(currentIndex);
     });
 
     // Função para criar um único fogo de artifício
